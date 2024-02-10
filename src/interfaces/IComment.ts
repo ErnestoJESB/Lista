@@ -1,7 +1,8 @@
 export interface IComment {
     id: number;
-    title: string;
-    body: string;
-    date: Date;
-    autor: string;
+    nombre: string;
+    descripcion: string;
+    fechaNac: Date;
+    equipo: string;
+    nacionalidad: string;
 }

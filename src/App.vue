@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import CommentItem from './components/Comments/CommentItem.vue';
 import CommentsList from './components/Comments/CommentsList.vue';
 
 
