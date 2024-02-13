@@ -25,20 +25,15 @@
 </template>
 <script setup lang="ts">
 import type { IComment } from '@/interfaces/IComment';
-import { defineProps, /* defineEmits, */ ref } from 'vue';
+import { defineProps, defineEmits,  ref } from 'vue';
 const props = defineProps<IComment>();
 
 
-/* const emits = defineEmits(['SayVue', 'SayBye']);
+const emits = defineEmits(['SayVue', 'SayBye']);
  
     const clicked = () => {
     emits('SayVue', props.id);
 };
-
-const bye = () => {
-    emits('SayBye', props.id);
-};
- */
 
 const backgroundColor = ref('#35D4FC');
 const fuenteColor = ref('#ffff');
