@@ -25,13 +25,13 @@
 </template>
 <script setup lang="ts">
 import type { IComment } from '@/interfaces/IComment';
-import { defineProps, defineEmits,  ref } from 'vue';
+import { defineProps, defineEmits, ref } from 'vue';
 const props = defineProps<IComment>();
 
 
 const emits = defineEmits(['SayVue', 'SayBye']);
- 
-    const clicked = () => {
+
+const clicked = () => {
     emits('SayVue', props.id);
 };
 
@@ -66,14 +66,17 @@ const changeFontColor = (color: string) => {
     justify-content: space-between;
     flex-wrap: wrap;
     max-width: 60%;
-    margin: auto; /* Centrar en la página */
+    margin: auto;
+    /* Centrar en la página */
 }
 
-.color-picker > div {
+.color-picker>div {
     flex: 1;
-    margin-right: 20px; /* Espacio entre las secciones */
+    margin-right: 20px;
+    /* Espacio entre las secciones */
 }
-.color{
+
+.color {
     flex-wrap: wrap;
 }
 
@@ -91,6 +94,4 @@ const changeFontColor = (color: string) => {
     margin: 0;
 }
 
-/* Agrega estilos adicionales según tus necesidades */
-
-</style>
+/* Agrega estilos adicionales según tus necesidades */</style>

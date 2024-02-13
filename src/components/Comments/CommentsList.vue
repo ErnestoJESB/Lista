@@ -1,25 +1,31 @@
 <template>
     <div>
-        <h2>Datos de futbolistas Mexicanos</h2>
-        <button @click="clicked" >Agregar Jugador</button>
+        <h2>Datos de futbolistas</h2>
+        <CommentAdd @-data="clicked"/>
         <div class="container">
             <CommentItem v-bind="comment"
                 v-for="(comment, index) in Comments" :key="index">
             </CommentItem>
         </div>
-        <CommentAdd></CommentAdd>
     </div>
 </template>
 <script setup lang="ts">
 import Comments from '@/data/CommentsData';
 import CommentItem from './CommentItem.vue';
 import CommentAdd from './CommentAdd.vue';
+import { ref } from 'vue';
 
+console.log(Comments);
 
-const clicked = () => {
-    /* Haz que agregue datos al array Comments */
+const clicked = (data: any) => { 
+    console.log(Comments.length + 1)   
+    const newLength = Comments.length + 1;
+    data.value.id = newLength;
+    console.log(data);
+    Comments.push(data);
     
 };
+
 
 </script>
 
@@ -37,6 +43,7 @@ body {
     grid-gap: 2em;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     justify-items: center;
+    padding-top: 50px;
 }
 
 @media (min-width: 550px) {
@@ -46,4 +53,6 @@ body {
     }
     */
 }
+
+
 </style> 

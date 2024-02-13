@@ -3,16 +3,16 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 
 const name: Ref<string> = ref('')
-const apellido: Ref<string> = ref('')
-const edad: Ref<number> = ref(0)
-const genero: Ref<string> = ref('Selecciona uno')
-const genre: Ref<string[]> = ref(['Selecciona uno', 'Masculino', 'Femenino', 'Otro'])
-const selectedGenero: Ref<string> = ref('')
-const otroGenero: Ref<string> = ref('')
+const descripcion: Ref<string> = ref('')
+const equipo: Ref<string> = ref('')
+const nacionalidad: Ref<string> = ref('')
+const nacionalidadSeleccionada: Ref<string> = ref('')
+const otroNacionalidad: Ref<string> = ref('')
 const errors: Ref<{ name: string }[]> = ref([])
-const errorApe: Ref<{ apellido: string }[]> = ref([])
-const errorEdad: Ref<{ edad: string }[]> = ref([])
-const errorGenero: Ref<{ genero: string }[]> = ref([])
+const fechaNac: Ref<Date> = ref(new Date())
+
+
+
 
 
 
@@ -23,112 +23,145 @@ const errorGenero: Ref<{ genero: string }[]> = ref([])
   Genero -> Masculino y femenino, otro -> al seleccionar otro, se debe mostrar un input para ingresar el genero
 */
 
+/* const handleSubmit = () => {
+    validation()
+    if (errors.value.length === 0 && errorApe.value.length === 0 && errorEdad.value.length === 0 && errorGenero.value.length === 0) {
+        data.value = [name.value, apellido.value, edad.value, selectedGenero.value]
+    }
+} */
 
-const handleGeneroChange = () => {
-    selectedGenero.value = genero.value
+
+const handleNacionalidadChange = () => {
+    nacionalidadSeleccionada.value = nacionalidad.value
 }
 
 const validation = () => {
     errors.value = []
-    errorApe.value = []
-    errorEdad.value = []
-    errorGenero.value = []
 
-    if (edad.value < 0 || edad.value > 60) {
-        errorEdad.value.push({ edad: 'Edad no permitida' })
-    }
-    if ((name.value.length < 5) || (name.value.length > 18 || name.value === '')) {
-        errors.value.push({ name: 'Error de nombre' })
-    }
-    if (name.value === apellido.value) {
-        errorApe.value.push({ apellido: 'No puedes poner tu nombre en el apellido' })
-    }
-    if (selectedGenero.value === 'Selecciona uno') {
-        errorGenero.value.push({ genero: 'Selecciona un genero' })
-    }
-    if (selectedGenero.value === 'Otro' && otroGenero.value === '') {
-        errorGenero.value.push({ genero: 'Ingresa un genero' })
-    }
-    if (selectedGenero.value === 'Otro' && otroGenero.value.length < 5) {
-        errorGenero.value.push({ genero: 'Genero no permitido' })
-    }
-    if (selectedGenero.value === 'Otro' && otroGenero.value.length > 18) {
-        errorGenero.value.push({ genero: 'Genero no permitido' })
-    }
-    if (selectedGenero.value === 'Otro' && otroGenero.value === genero.value) {
-        errorGenero.value.push({ genero: 'Genero no permitido' })
-    }
 }
 
+interface FormData {
+    id: number;
+    nombre: string;
+    descripcion: string;
+    fechaNac: Date;
+    equipo: string;
+    nacionalidad: string;
+}
+
+const data: Ref<FormData[]> = ref([]);
+
+const handleSubmit = () => {
+    const formData: FormData = {
+        id: data.value.length,
+        nombre: name.value,
+        descripcion: descripcion.value,
+        fechaNac: fechaNac.value,
+        equipo: equipo.value,
+        nacionalidad: nacionalidad.value,
+    };
+
+    data.value.push(formData);
+    clicked();
+}
+
+const emits = defineEmits(['Data']);
+const clicked = () => {
+    emits('Data', data.value);
+};
+
+const nationalities: string[] = [
+    'Mexicana',
+    'Brasileña',
+    'Canadiense',
+    'Estadounidense',
+    'Española',
+    'Inglesa',
+    'Alemana',
+    'Otro'
+];
 
 </script>
 
 <template>
-    <!--  <main>
-        <h3>Nombre</h3>
-        <div>
-            <input @input="validation" v-model="name" type="text" placeholder="Escribe tu nombre">
-        </div>
-        <span v-for="(err, index) in errors" :key="index">{{ err.name }}</span>
-        <span></span>
-        <h3>Apellido</h3>
-        <div>
-            <input @input="validation" v-model="apellido" type="text" placeholder="Escribe tu apellido">
-        </div>
-        <span v-for="(err, index) in errorApe" :key="index">{{ err.apellido }}</span>
-        <h3>Edad</h3>
-        <div>
-            <input @input="validation" v-model="edad" type="number" placeholder="Escribe tu edad">
-        </div>
-        <span v-for="(err, index) in errorEdad" :key="index">{{ err.edad }}</span>
-        <h3>Genero</h3>
-        <div>
-            <select @change="handleGeneroChange" v-model="genero">
-                <option v-for="(gen, index) in genre" :key="index">{{ gen }}</option>
-            </select>
-        </div>
-        <div v-if="selectedGenero === 'Otro'">
-            <input @input="validation" v-model="otroGenero" type="text">
-            <span v-for="(err, index) in errorGenero" :key="index">{{ err.genero }}</span>
-        </div>
-    </main> -->
+    <div class="card" :style="{ width: '100%' }">
+        <div class="card-inner">
 
-
-    <form class="px-7 h-screen grid justify-center items-center">
-        <div class="grid gap-6" id="form">
-            <div class="w-full flex gap-3">
-                <input @input="validation" v-model="name" type="text" placeholder="Escribe el nombre"
-                    class="capitalize shadow-2xl p-3 ex w-full outline-none focus:border-solid focus:border-[1px] border-[#035ec5] placeholder:text-black"
-                    id="nombre" name="nombre">
-                <span v-for="(err, index) in errors" :key="index">{{ err.name }}</span>
-                <input @input="validation" v-model="apellido" type="text" placeholder="Escribe la descripcion"
-                    class="p-3 capitalize shadow-2xl  glass w-full placeholder:text-black outline-none focus:border-solid focus:border-[1px] border-[#035ec5]"
-                    id="descripcion" name="descripcion">
+            <div class="px-7 h-screen grid justify-center items-center">
+                <h1>Formulario de futbolistas</h1>
+                <div class="grid gap-6" id="form">
+                    <div class="w-full flex gap-3">
+                        <input v-model="name" type="text" placeholder="Escribe el nombre"
+                            class="capitalize shadow-2xl p-3 ex w-full outline-none focus:border-solid focus:border-[1px] border-[#035ec5] placeholder:text-black"
+                            id="nombre" name="nombre">
+                        <span v-for="(err, index) in errors" :key="index">{{ err.name }}</span>
+                        <input v-model="descripcion" type="text" placeholder="Escribe la descripcion"
+                            class="p-3 capitalize shadow-2xl  glass w-full placeholder:text-black outline-none focus:border-solid focus:border-[1px] border-[#035ec5]"
+                            id="descripcion" name="descripcion">
+                    </div>
+                    <div class="grid gap-6 w-full">
+                        <input v-model="fechaNac" type="date"
+                            class="p-3 shadow-2xl   glass w-full text-black outline-none focus:border-solid focus:border-[1px]border-[#035ec5]">
+                        <input
+                            class="p-3 shadow-2xl  glass w-full placeholder:text-black outline-none focus:border-solid border-[#035ec5] focus:border-[1px]"
+                            v-model="equipo" type="text" placeholder="Escribe el nombre del equipo" name="equipo">
+                    </div>
+                    <div class="flex gap-3">
+                        <!-- crea un select con la nacionalidades -->
+                        <select @change="handleNacionalidadChange" v-model="nacionalidad" class="p-3 shadow
+                            glass w-full outline-none focus:border-solid focus:border-[1px] border-[#035ec5]">
+                            <option value="Selecciona una nacionalidad">Selecciona una nacionalidad</option>
+                            <option v-for="(nationality, index) in nationalities" :key="index">{{ nationality }}</option>
+                        </select>
+                        <div v-if="nacionalidadSeleccionada === 'Otro'">
+                            <input @input="validation" v-model="otroNacionalidad" type="text">
+                        </div>
+                    </div>
+                    <button @click="handleSubmit" class="button">Guardar jugador</button>
+                </div>
             </div>
-            <div class="grid gap-6 w-full">
-                <input
-                    class="p-3 shadow-2xl   glass w-full text-black outline-none focus:border-solid focus:border-[1px]border-[#035ec5]"
-                    type="date">
-                <!-- <input
-                    class="p-3 shadow-2xl  glass w-full placeholder:text-black outline-none focus:border-solid border-[#035ec5] focus:border-[1px]"
-                    type="Email" placeholder="Email" id="Email" name="email"> -->
-            </div>
-            <!-- <div class="flex gap-3">
-                <input
-                    class="p-3 glass shadow-2xl  w-full placeholder:text-black outline-none focus:border-solid focus:border-[1px] border-[#035ec5]"
-                    type="password" placeholder="Password" id="password" name="password" >
-                <input
-                    class="p-3 glass shadow-2xl  w-full placeholder:text-black outline-none focus:border-solid focus:border-[1px] border-[#035ec5]"
-                    type="password" placeholder="Confirm password" required="">
-            </div> -->
-            <button
-                class="outline-none glass shadow-2xl  w-full p-3  bg-[#ffffff42] hover:border-[#035ec5] hover:border-solid hover:border-[1px]  hover:text-[#035ec5] font-bold"
-                type="submit">Submit</button>
         </div>
-    </form>
+    </div>
 </template>
 
 <style scoped@>
+.card {
+    --bg: #e8e8e8;
+    --contrast: #e2e0e0;
+    --grey: #93a1a1;
+    position: relative;
+    padding: 9px;
+    background-color: var(--bg);
+    border-radius: 35px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-conic-gradient(var(--bg) 0.0000001%, var(--grey) 0.000104%) 60% 60%/600% 600%;
+    filter: opacity(10%) contrast(105%);
+}
+
+.card-inner {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+    height: 450px;
+    background-color: var(--contrast);
+    border-radius: 30px;
+    /* Content style */
+    font-weight: 900;
+    color: #2c9caf;
+    text-align: center;
+    font-family: monospace;
+}
+
 main {
     max-width: 600px;
     margin: 0 auto;
@@ -157,5 +190,45 @@ span {
 .error {
     color: red;
     margin-top: 5px;
+}
+
+.button {
+    padding: 1em 2em;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: #2c9caf;
+    transition: all 1000ms;
+    font-size: 15px;
+    position: relative;
+    overflow: hidden;
+    outline: 2px solid #2c9caf;
+}
+
+button:hover {
+    color: #ffffff;
+    transform: scale(1.1);
+    outline: 2px solid #70bdca;
+    box-shadow: 4px 5px 17px -4px #268391;
+}
+
+button::before {
+    content: "";
+    position: absolute;
+    left: -50px;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background-color: #2c9caf;
+    transform: skewX(45deg);
+    z-index: -1;
+    transition: width 1000ms;
+}
+
+button:hover::before {
+    width: 250%;
 }
 </style>
